@@ -30,7 +30,7 @@ onMounted(() => {
     }
 });
 
-onUnmounted(() => { 
+onUnmounted(() => {
     clearInterval(pollTimer);
     clearTimeout(scanTimer);
 });
@@ -161,7 +161,7 @@ const nameClass = (participant) =>
 
                                     <Transition name="fade">
                                         <p v-if="gte('block')" class="font-mono text-sm text-[#f7931a]">
-                                            ⚡ Novo bloco detectado na rede Bitcoin
+                                            ⚡ Bloco detectado na rede Bitcoin
                                         </p>
                                     </Transition>
 
@@ -176,7 +176,7 @@ const nameClass = (participant) =>
 
                                     <Transition name="fade">
                                         <p v-if="phase === 'scanning'" class="text-sm text-zinc-400">
-                                            Definindo o vencedor ...
+                                            Procurando o vencedor ...
                                         </p>
                                     </Transition>
 
