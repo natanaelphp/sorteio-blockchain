@@ -39,6 +39,8 @@ class RaffleController extends Controller
                 'participants' => $raffle->participants,
                 'status' => $raffle->status,
                 'status_label' => $raffle->status === 'waiting' ? 'Aguardando bloco' : 'Concluído',
+                'block_hash' => $raffle->block_hash,
+                'winner' => $raffle->winner,
                 'created_at' => $raffle->created_at->format('d/m/Y H:i'),
             ],
         ]);
