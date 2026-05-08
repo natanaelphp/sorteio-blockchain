@@ -20,7 +20,7 @@ defineProps({
                         </div>
                         <div>
                             <p class="font-mono text-xs uppercase tracking-[0.32em] text-[#f7931a]">
-                                Bitcoin raffle
+                                Sorteio Blockchain
                             </p>
                             <p class="text-sm text-zinc-400">
                                 Aleatoriedade verificável usando a blockchain do Bitcoin

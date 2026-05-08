@@ -122,7 +122,7 @@ const nameClass = (participant) =>
         <div class="space-y-8 py-14">
             <div>
                 <p class="font-mono text-sm uppercase tracking-[0.28em] text-[#f7931a]">
-                    Sorteio em andamento
+                    {{ raffle.status_label }}
                 </p>
 
                 <div class="mt-8 grid gap-4 lg:grid-cols-[1fr_24rem]">

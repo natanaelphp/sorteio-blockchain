@@ -1,4 +1,4 @@
-# 🎲 Sorteio Blockchain (Blockchain Raffle)
+# 🎲 Sorteio Blockchain
 
 Um sistema de sorteios 100% transparente e auditável que utiliza a blockchain do **Bitcoin** como fonte pública e imutável de entropia (aleatoriedade).
 
