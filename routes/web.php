@@ -1,11 +1,18 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\RaffleController;
+use App\Http\Controllers\ProfileController;
 
-Route::get('/', function () {
+Route::redirect('/', 'raffle/create');
+
+Route::get('raffle/create', [RaffleController::class, 'create'])->name('raffle.create');
+Route::post('raffle', [RaffleController::class, 'store'])->name('raffle.store');
+Route::get('raffle/{id}', [RaffleController::class, 'show'])->name('raffle.show');
+
+Route::get('/welcome', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
