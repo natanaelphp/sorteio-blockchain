@@ -19,7 +19,7 @@ class ListenBitcoinBlocks extends Command
 
         $socket = $context->getSocket(ZMQ::SOCKET_SUB);
 
-        $socket->connect("tcp://127.0.0.1:28332");
+        $socket->connect(env('BITCOIN_ZMQ_HOST'));
         $socket->setSockOpt(ZMQ::SOCKOPT_SUBSCRIBE, "hashblock");
 
         $this->info("Aguardando blocos...");
