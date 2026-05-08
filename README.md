@@ -1,58 +1,61 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🎲 Sorteio Blockchain (Blockchain Raffle)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Um sistema de sorteios 100% transparente e auditável que utiliza a blockchain do **Bitcoin** como fonte pública e imutável de entropia (aleatoriedade).
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 💡 O Problema e a Nossa Solução
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Sorteios web tradicionais dependem de geradores de números pseudo-aleatórios (PRNGs) escondidos em servidores privados (`Math.random()`, `rand()`, etc.). Isso exige **confiança cega** dos participantes: ninguém garante que o dono do servidor não manipulou o resultado no banco de dados.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+**Nossa solução:** Nós removemos a necessidade de confiança. Ao atrelar a seleção do vencedor ao hash do próximo bloco do Bitcoin, nós garantimos que:
 
-## Learning Laravel
+1. **Transparência Absoluta:** O número vencedor deriva de uma fonte pública. Qualquer pessoa no mundo pode consultar o bloco num explorador de blocos e verificar a matemática.
+2. **Imprevisibilidade Matemática:** Ninguém — nem os criadores da plataforma, nem os participantes, nem os próprios mineradores de Bitcoin — pode prever ou forjar o hash do próximo bloco.
+3. **Imutabilidade:** Após a confirmação da rede, o resultado fica gravado para sempre na história, imune a fraudes retroativas.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## ⚙️ Como o Algoritmo Funciona?
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+O fluxo do sorteio é simples, elegante e totalmente determinístico:
 
-## Agentic Development
+1. As pessoas participam do sorteio recebendo bilhetes sequenciais (ex: bilhetes de 0 a 99).
+2. O sorteio é bloqueado para novas entradas. O sistema define que o resultado dependerá do **próximo bloco a ser minerado** na rede.
+3. Quando o bloco é minerado, o nó do Bitcoin notifica o nosso servidor em tempo real (via ZeroMQ).
+4. O servidor extrai o Hash do Bloco (uma string hexadecimal gigante, ex: `00000000000000000003b...`).
+5. Transformamos esse hash hexadecimal em um número decimal gigantesco.
+6. Aplicamos a operação de módulo: `Número Decimal % Total de Participantes = Índice do Vencedor`.
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Como a lista de participantes e o hash do bloco são dados abertos, **qualquer juiz, auditor ou participante pode reproduzir o cálculo e chegar exatamente ao mesmo vencedor.**
 
-```bash
-composer require laravel/boost --dev
+---
 
-php artisan boost:install
-```
+## 🛠️ Stack Tecnológica
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+O projeto foi construído focando em performance, reatividade em tempo real e boas práticas de arquitetura.
 
-## Contributing
+### Backend
+* **Laravel 13:** Orquestração geral, rotas, banco de dados e APIs limpas.
+* **PHP 8.3:** Linguagem base com forte tipagem e recursos modernos.
+* **ZeroMQ (ZMQ):** Estabelece um *socket* de comunicação constante e leve com o nó do Bitcoin, escutando eventos de novos blocos (`hashblock`) em *background* via um comando Artisan dedicado (`ListenBitcoinBlocks`).
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Frontend
+* **Vue.js 3:** Criando uma interface web3-style dinâmica e reativa.
+* **Inertia.js:** Faz a ponte entre Laravel e Vue, permitindo construir uma *Single Page Application (SPA)* sem a necessidade de construir uma API REST complexa de meio de campo.
+* **Tailwind CSS:** Estilização moderna, responsiva e focada em utilitários.
 
-## Code of Conduct
+### Blockchain
+* **Bitcoin Core (Modo Regtest):** Para este ambiente de Hackathon, o projeto se conecta a um nó de Bitcoin rodando localmente em modo *Regression Test*. Isso nos permite simular a rede principal (Mainnet), minerando blocos sob demanda instantaneamente e sem custo financeiro, validando toda a arquitetura que funciona de forma idêntica no mundo real.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 🚀 Para o Avaliador: O que observar
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Durante a avaliação deste projeto, sugerimos atentar para os seguintes pontos de destaque:
 
-## License
+1. **A Integração Real com o Node:** Não estamos mockando (simulando falsamente) a blockchain. O Laravel está ativamente ouvindo uma porta TCP via ZMQ conectada a um nó real do Bitcoin Core.
+2. **Separação de Conceitos (Clean Code):** Observe como isolamos a lógica do modelo de domínio das regras de repositório e infraestrutura, garantindo que o comando do console responsável pelo listener não se misture com a persistência de banco de dados.
+3. **UX Transparente:** O frontend não apenas mostra o vencedor, mas exibe o hash do bloco exato que gerou a vitória, educando o usuário e fornecendo a prova criptográfica do resultado.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Obrigado por avaliar nosso projeto! 
