@@ -30,8 +30,17 @@ class RaffleController extends Controller
 
     public function show(string $id): Response
     {
+        $raffle = Raffle::findOrFail($id);
+
         return Inertia::render('Raffle/Show', [
-            'id' => $id,
+            'raffle' => [
+                'id' => $raffle->id,
+                'title' => $raffle->title,
+                'participants' => $raffle->participants,
+                'status' => $raffle->status,
+                'status_label' => $raffle->status === 'waiting' ? 'Aguardando bloco' : 'Concluído',
+                'created_at' => $raffle->created_at->format('d/m/Y H:i'),
+            ],
         ]);
     }
 }
