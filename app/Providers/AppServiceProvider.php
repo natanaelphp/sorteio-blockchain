@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
+use App\Infra\Repository\RaffleRepository;
+use App\Domain\Repository\RaffleRepositoryInterface;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -12,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(RaffleRepositoryInterface::class, RaffleRepository::class);
     }
 
     /**

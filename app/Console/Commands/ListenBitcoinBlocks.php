@@ -7,12 +7,13 @@ use ZMQContext;
 use Illuminate\Console\Command;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Attributes\Description;
+use App\Domain\Repository\RaffleRepositoryInterface;
 
 #[Signature('app:listen-bitcoin-blocks')]
 #[Description('Receber blocos da rede bitcoin vie ZMQ')]
 class ListenBitcoinBlocks extends Command
 {
-    public function handle()
+    public function handle(RaffleRepositoryInterface $raffleRepository)
     {
         $context = new ZMQContext();
 
@@ -21,7 +22,7 @@ class ListenBitcoinBlocks extends Command
         $socket->connect("tcp://127.0.0.1:28332");
         $socket->setSockOpt(ZMQ::SOCKOPT_SUBSCRIBE, "hashblock");
 
-        $this->info("Listening for blocks...");
+        $this->info("Aguardando blocos...");
 
         while (true) {
             $message = $socket->recvMulti();
@@ -32,9 +33,25 @@ class ListenBitcoinBlocks extends Command
             $hash = bin2hex($body);
 
             $this->newLine();
-            $this->info("New block detected!");
-            $this->line("Topic: {$topic}");
+            $this->line("Novo bloco detectado!");
+            $this->line("Tópico: {$topic}");
             $this->line("Hash: {$hash}");
+            $this->newLine();
+
+            $raffles = $raffleRepository->getWaitingRaffles();
+
+            if (count($raffles) == 0) {
+                $this->info('Nenhum sorteio a ser realizado.');
+            }
+
+            foreach($raffles as $raffle) {
+                $this->info("Sorteando: {$raffle->getTitle()}");
+                $this->info("Ganhador: {$raffle->draw($hash)}");
+
+                $raffleRepository->update($raffle);
+
+                $this->newLine();
+            }
         }
     }
 }
