@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import CountBadge from '@/Components/Raffle/CountBadge.vue';
+import HowItWorks from '@/Components/Raffle/HowItWorks.vue';
 import NumberedList from '@/Components/Raffle/NumberedList.vue';
 import Panel from '@/Components/Raffle/Panel.vue';
 import RaffleLayout from '@/Layouts/RaffleLayout.vue';
@@ -162,6 +163,10 @@ const submit = () => {
                     {{ form.processing ? 'Criando sorteio...' : 'Criar sorteio' }}
                 </button>
             </Panel>
+        </div>
+
+        <div class="pb-14">
+            <HowItWorks />
         </div>
     </RaffleLayout>
 </template>

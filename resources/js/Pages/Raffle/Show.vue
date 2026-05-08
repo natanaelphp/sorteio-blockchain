@@ -3,6 +3,7 @@ import { computed, ref, onMounted, onUnmounted, watch } from 'vue';
 import { Head, router } from '@inertiajs/vue3';
 import { LoaderCircle, Zap, Trophy } from 'lucide-vue-next';
 import CountBadge from '@/Components/Raffle/CountBadge.vue';
+import HowItWorks from '@/Components/Raffle/HowItWorks.vue';
 import Panel from '@/Components/Raffle/Panel.vue';
 import RaffleLayout from '@/Layouts/RaffleLayout.vue';
 
@@ -202,6 +203,9 @@ const nameClass = (participant) =>
                     </dl>
                 </div>
             </div>
+
+            <!-- Como funciona a escolha do ganhador -->
+            <HowItWorks :phase="phase" />
 
             <!-- Lista de participantes -->
             <Panel>
